@@ -1,3 +1,10 @@
 body {
     background-color: lavender;
 }
+
+#message {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: aqua;
+}

@@ -14,6 +14,7 @@ interface Obstacle {
 }
 
 interface MiniGolfLevelData {
+    par: number
     ball: Geometry.Point
     goal: Geometry.Point
     width: number
@@ -56,7 +57,7 @@ class MiniGolfLevel {
 
         const shapeValue = corners.length > 0 ? shapes.polygon : shapes[shape];
 
-        return new Body({
+        const body = new Body({
             x, y, size,
             shape: shapeValue,
             heading: obstacle.heading || 0,
@@ -66,6 +67,7 @@ class MiniGolfLevel {
             color: 'rgba(0,0,0,1)',
         })
 
+        return body;
     }
 }
 

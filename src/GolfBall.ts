@@ -1,4 +1,4 @@
-import { Body, BodyData, Force, Geometry } from "../../worlds/src";
+import { Body, Force, Geometry } from "../../worlds/src";
 import { Hole } from "./Hole";
 
 class GolfBall extends Body {
@@ -32,7 +32,6 @@ class GolfBall extends Body {
                 const { holeThisIsIn } = this;
                 if (holeThisIsIn) {
                     this.world.emitter.emit('BALL_IN_HOLE', { golfBall: this, hole: holeThisIsIn });
-                    console.log({ holeThisIsIn })
                 }
             }
         }

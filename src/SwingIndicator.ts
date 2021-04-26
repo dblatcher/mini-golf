@@ -5,6 +5,9 @@ import { GolfBall } from "./GolfBall";
 
 class SwingIndicator extends Effect {
     cursorPoint: Geometry.Point
+    maxPushForce: number
+    pushForceDistanceMultipler: number
+
 
     constructor() {
         super({ x: 0, y: 0, frame: 0, duration: Infinity });
@@ -16,11 +19,11 @@ class SwingIndicator extends Effect {
         return this.world.bodies.find(body => body.typeId == 'GolfBall') as GolfBall
     }
 
-    get maxPushForce() { return 50 }
-    get pushForceDistanceMultipler() { return 200 }
+
     get maxLineDistance() {
-        if (!this.golfBall) { return 0 }
-        return (this.maxPushForce * this.golfBall.mass) / this.pushForceDistanceMultipler
+        const { golfBall, maxPushForce, pushForceDistanceMultipler } = this
+        if (!golfBall || !maxPushForce || !pushForceDistanceMultipler) { return 0 }
+        return (maxPushForce * golfBall.mass) / pushForceDistanceMultipler
     }
 
     renderOnCanvas(ctx: CanvasRenderingContext2D, viewPort: ViewPort) {
@@ -50,7 +53,7 @@ class SwingIndicator extends Effect {
         RenderFunctions.renderLine.onCanvas(ctx, [golfBall.data, plotPoint], style, viewPort)
     }
 
-    tick() {}
+    tick() { }
 }
 
 export { SwingIndicator }
