@@ -54,7 +54,7 @@ class ScoreCard {
         table.innerHTML += `
         <thead>
             <tr>
-                <th colspan="3"></th><th>${this.totalScore}</th>
+                <th colspan="3"></th><th>${this.totalScore} over par</th>
             </tr>
         </thead>
         `
@@ -64,15 +64,16 @@ class ScoreCard {
         function makeRow(rowData: ScoreCardRow) {
             const row = document.createElement('tr')
             row.appendChild(makeCell(rowData.name, true));
-            row.appendChild(makeCell(rowData.shots, false));
+            row.appendChild(makeCell(rowData.shots !== null ? rowData.shots : "", false));
             row.appendChild(makeCell(rowData.par, false));
-            row.appendChild(makeCell(rowData.score, false));
+            row.appendChild(makeCell(rowData.score !== null ? rowData.score + " over par" : "", false));
             return row
         }
 
         function makeCell(content: string | number, isTh = false) {
             const cell = document.createElement(isTh ? 'th' : 'td')
-            cell.innerHTML = content ? content.toString() : "";
+            const isEmpty = content == null || typeof content === 'undefined';
+            cell.innerHTML = !isEmpty ? content.toString() : "";
             return cell
         }
     }

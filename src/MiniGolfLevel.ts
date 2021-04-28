@@ -1,4 +1,4 @@
-import { Body, Geometry, shapes, World } from "../../worlds/src";
+import { Area, Body, Geometry, shapes, World } from "../../worlds/src";
 import { GolfBall } from "./GolfBall";
 import { Hole } from "./Hole";
 import { SwingIndicator } from "./SwingIndicator";
@@ -10,8 +10,20 @@ interface Obstacle {
     size?: number
     heading?: number
     corners?: Geometry.Vector[]
+    rotate?: number
     shape?: 'square' | 'polygon' | 'circle'
 }
+
+interface Bunker {
+    x: number
+    y: number
+    size?: number
+    heading?: number
+    corners?: Geometry.Vector[]
+    shape?: 'square' | 'polygon' | 'circle'
+}
+
+
 
 interface MiniGolfLevelData {
     par: number
@@ -21,6 +33,7 @@ interface MiniGolfLevelData {
     height: number
 
     obstacles?: Obstacle[]
+    bunkers?: Bunker[]
 }
 
 class MiniGolfLevel {
@@ -29,17 +42,19 @@ class MiniGolfLevel {
     constructor(data: MiniGolfLevelData) {
         this.data = data
         this.data.obstacles = data.obstacles || []
+        this.data.bunkers = data.bunkers || []
     }
 
     makeWorld() {
 
-        const { ball, goal, width, height, obstacles } = this.data
+        const { ball, goal, width, height, obstacles, bunkers } = this.data
 
         return new World(
             [
                 new GolfBall(ball),
                 new Hole(goal),
-                ...obstacles.map(obstacle => MiniGolfLevel.makeBodyFromObstacle(obstacle))
+                ...obstacles.map(obstacle => MiniGolfLevel.makeBodyFromObstacle(obstacle)),
+                ...bunkers.map(bunker => MiniGolfLevel.makeAreaFromBunker(bunker)),
             ],
             {
                 width, height,
@@ -67,7 +82,31 @@ class MiniGolfLevel {
             color: 'rgba(0,0,0,1)',
         })
 
+        if (obstacle.rotate) {
+            body.tick = () => {
+                body.data.heading += obstacle.rotate
+            }
+        }
+
         return body;
+    }
+
+    static makeAreaFromBunker(bunker: Bunker) {
+        const { x, y, size = 10, corners = [], shape = 'square' } = bunker
+
+        const shapeValue = corners.length > 0 ? shapes.polygon : shapes[shape];
+
+        const area = new Area({
+            x, y, size,
+            shape: shapeValue,
+            density: 2,
+            heading: bunker.heading || 0,
+            corners,
+            fillColor: 'rgba(200,150,50,1)',
+            color: 'rgba(0,0,0,1)',
+        })
+
+        return area;
     }
 }
 
