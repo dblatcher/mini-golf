@@ -6,6 +6,7 @@ const levels: MiniGolfLevel[] = [
 
 
     new MiniGolfLevel({
+        name:'Sand Trap',
         par: 4, width: 500, height: 500,
         ball: { x: 50, y: 100 },
         goal: { x: 450, y: 50 },
@@ -25,7 +26,9 @@ const levels: MiniGolfLevel[] = [
         ]
     }),
 
-    new MiniGolfLevel({ par: 2, width: 300, height: 500, ball: { x: 70, y: 50 }, goal: { x: 200, y: 440 },
+    new MiniGolfLevel({ 
+        name:'Whirlyjig',
+        par: 2, width: 300, height: 500, ball: { x: 70, y: 50 }, goal: { x: 200, y: 440 },
         obstacles: [
             {
                 x: 150, y: 250, size: 100, heading: 0, shape: 'polygon', rotate:.02, corners: [
@@ -40,6 +43,7 @@ const levels: MiniGolfLevel[] = [
 
 
     new MiniGolfLevel({
+        name:'Tap round',
         par: 4, width: 500, height: 300,
         ball: { x: 50, y: 50 },
         goal: { x: 400, y: 150 },

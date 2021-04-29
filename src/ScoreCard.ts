@@ -16,7 +16,7 @@ class ScoreCard {
         this.rows = levels.map((level, index) => {
             return {
                 index,
-                name: `Hole ${index + 1}`,
+                name: level.data.name || `Hole ${index + 1}`,
                 shots: typeof shots[index] == 'number' ? shots[index] : null,
                 par: level.data.par,
                 score: typeof shots[index] == 'number' ? shots[index] - level.data.par : null,
@@ -40,7 +40,7 @@ class ScoreCard {
         table.innerHTML += `
         <thead>
             <tr>
-                <th></th><th>shots</th><th>par</th><th>score</th>
+                <th></th><th>par</th><th>shots</th><th>score</th>
             </tr>
         </thead>
         `
@@ -64,8 +64,8 @@ class ScoreCard {
         function makeRow(rowData: ScoreCardRow) {
             const row = document.createElement('tr')
             row.appendChild(makeCell(rowData.name, true));
-            row.appendChild(makeCell(rowData.shots !== null ? rowData.shots : "", false));
             row.appendChild(makeCell(rowData.par, false));
+            row.appendChild(makeCell(rowData.shots !== null ? rowData.shots : "", false));
             row.appendChild(makeCell(rowData.score !== null ? rowData.score + " over par" : "", false));
             return row
         }

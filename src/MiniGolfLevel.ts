@@ -26,6 +26,7 @@ interface Bunker {
 
 
 interface MiniGolfLevelData {
+    name?: string
     par: number
     ball: Geometry.Point
     goal: Geometry.Point
