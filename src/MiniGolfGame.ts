@@ -22,6 +22,7 @@ class MiniGolfGame {
     config: MiniGolfGameConfig
     world: World
     mainView: ViewPort
+    scoreCard: ScoreCard
     cursorPoint: Geometry.Point
     levelNumber: number
     shotsThisRound: number[]
@@ -36,6 +37,11 @@ class MiniGolfGame {
         this.config.resetButton.addEventListener('click', this.reset);
         this.config.mainCanvas.addEventListener('click', this.handleClick);
         this.config.mainCanvas.addEventListener('mousemove', this.handleHover);
+
+        const scores: number[] = [];
+        scores.length = this.config.levels.length;
+        scores.fill(0, 0, scores.length);
+        this.scoreCard = new ScoreCard(this.config.levels, scores);
 
         this.reset();
     }
@@ -67,6 +73,8 @@ class MiniGolfGame {
             magnify: 1,
         })
         this.world.ticksPerSecond = 50;
+
+        this.scoreCard.setCurrentLevel(this.currentLevel)
         this.shotsThisRound[this.levelNumber] = 0;
         this.updateCaptions();
         this.status = "PLAY"
@@ -77,11 +85,12 @@ class MiniGolfGame {
         if (!scoreLabel) { return }
 
         scoreLabel.innerText = this.currentLevel ? `${this.shotsThisRound[this.levelNumber]} shots / ${this.currentLevel.data.par}.` : '';
-        const scoreCard = new ScoreCard (this.config.levels, this.shotsThisRound);
+
+        this.scoreCard.updateAll(this.shotsThisRound);
 
         if (this.config.messageElement) {
             this.config.messageElement.innerHTML = "";
-            this.config.messageElement.appendChild(scoreCard.renderTable())
+            this.config.messageElement.appendChild(this.scoreCard.renderTable())
         }
     }
 
