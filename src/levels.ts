@@ -34,6 +34,10 @@ const levels: MiniGolfLevel[] = [
                 x: 150, y: 250, size: 100, heading: 0, shape: 'polygon', rotate:.02, corners: [
                     { x: -.2, y: -1 },
                     { x: .2, y: -1 },
+                    { x: .2, y: -.2 },
+                    { x: 1, y: -.2 },
+                    { x: 1, y: .2 },
+                    { x: .2, y: .2 },
                     { x: .2, y: 1 },
                     { x: -.2, y: 1 },
                 ]

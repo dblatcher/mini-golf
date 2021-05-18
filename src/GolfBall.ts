@@ -24,12 +24,16 @@ class GolfBall extends Body {
 
     tick() {
         if (this.momentum.magnitude) {
+            const { holeThisIsIn } = this;
+
+            if (holeThisIsIn) {
+                this.momentum.magnitude *= .75
+            }
 
             if (this.momentum.magnitude < .1) {
                 this.momentum.magnitude = 0
                 this.world.emitter.emit('BALL_STOP', { golfBall: this });
 
-                const { holeThisIsIn } = this;
                 if (holeThisIsIn) {
                     this.world.emitter.emit('BALL_IN_HOLE', { golfBall: this, hole: holeThisIsIn });
                 }

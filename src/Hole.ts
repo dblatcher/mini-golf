@@ -9,12 +9,11 @@ class Hole extends Area {
             color: 'black',
             fillColor: 'black',
             size: 12,
-            density: 2
+            density: .5
         })
     }
 
     get typeId() { return "Hole" }
-
 }
 
 
