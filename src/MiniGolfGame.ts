@@ -12,7 +12,7 @@ const { getDistanceBetweenPoints, getHeadingFromPointToPoint } = Geometry
 
 interface MiniGolfGameConfig {
     mainCanvas: HTMLCanvasElement
-    scoreLabel: HTMLElement
+    captionElement: HTMLElement
     messageElement: HTMLElement
     resetButton: HTMLElement
     levels: MiniGolfLevel[]
@@ -76,15 +76,21 @@ class MiniGolfGame {
 
         this.scoreCard.setCurrentLevel(this.currentLevel)
         this.shotsThisRound[this.levelNumber] = 0;
-        this.updateCaptions();
         this.status = "PLAY"
+        this.updateCaptions();
     }
 
     updateCaptions() {
-        const { scoreLabel } = this.config;
-        if (!scoreLabel) { return }
-
-        scoreLabel.innerText = this.currentLevel ? `${this.shotsThisRound[this.levelNumber]} shots / ${this.currentLevel.data.par}.` : '';
+        const { captionElement } = this.config;
+ 
+        switch(captionElement && this.status) {
+            case "PLAY":
+                captionElement.innerText = this.currentLevel ? this.currentLevel.data.name : " ";
+                break;
+            case "END":
+                captionElement.innerText = "Course over!";
+                break;
+        }
 
         this.scoreCard.updateAll(this.shotsThisRound);
 

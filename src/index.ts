@@ -6,7 +6,7 @@ function init() {
 
     (window as any).game = new MiniGolfGame({
         mainCanvas: document.querySelector('#mainCanvas'),
-        scoreLabel: document.querySelector('#caption'),
+        captionElement: document.querySelector('#caption'),
         messageElement: document.querySelector('#message'),
         resetButton: document.querySelector('#resetButton'),
         levels,
