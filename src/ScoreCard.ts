@@ -54,6 +54,13 @@ class ScoreCard {
         if (oldCurrentRow && oldCurrentRow !== newCurrentRow) {oldCurrentRow.status = "DONE"}
     }
 
+    clear() {
+        this.rows.forEach((row, index) => {
+            row.shots = 0;
+            row.status = index == 0 ? "CURRENT" : "NOT STARTED";
+        })
+    }
+
     read(level: MiniGolfLevel) {
         const row = this.rows.find(row => row.level == level);
         if (!row) { return undefined }

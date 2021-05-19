@@ -74,16 +74,14 @@ class MiniGolfGame {
         })
         this.world.ticksPerSecond = 50;
 
-        this.scoreCard.setCurrentLevel(this.currentLevel)
         this.shotsThisRound[this.levelNumber] = 0;
         this.status = "PLAY"
-        this.updateCaptions();
     }
 
     updateCaptions() {
         const { captionElement } = this.config;
- 
-        switch(captionElement && this.status) {
+
+        switch (captionElement && this.status) {
             case "PLAY":
                 captionElement.innerText = this.currentLevel ? this.currentLevel.data.name : " ";
                 break;
@@ -111,13 +109,21 @@ class MiniGolfGame {
         this.levelNumber = 0
         this.shotsThisRound = [];
         this.setUpLevel(this.currentLevel)
+        this.scoreCard.clear();
+        this.scoreCard.setCurrentLevel(this.currentLevel)
+        this.updateCaptions()
     }
 
     goToNextLevel() {
         this.levelNumber++
+        if (this.levelNumber >= this.config.levels.length) {
+            this.endOfCourse()
+        }
+        else {
+            this.setUpLevel(this.currentLevel);
+            this.scoreCard.setCurrentLevel(this.currentLevel)
+        }
         this.updateCaptions()
-        if (this.levelNumber >= this.config.levels.length) { return this.endOfCourse() }
-        this.setUpLevel(this.config.levels[this.levelNumber]);
     }
 
     handleBallInHole() {
