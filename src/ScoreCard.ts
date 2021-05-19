@@ -31,7 +31,12 @@ class ScoreCardRow {
         row.appendChild(makeCell(name, true));
         row.appendChild(makeCell(par, false));
         row.appendChild(makeCell(this.status !== "NOT STARTED" ? this.shots : "", false));
-        row.appendChild(makeCell(this.score !== null ? this.score + " over par" : "", false));
+        row.appendChild(makeCell(this.score !== null
+            ? this.score > 0
+                ? this.score + " over par"
+                : -this.score + " under par"
+            : "",
+            false));
         return row
     }
 }
@@ -51,7 +56,7 @@ class ScoreCard {
         const oldCurrentRow = this.rows.find(row => row.status == "CURRENT");
 
         newCurrentRow.status = "CURRENT"
-        if (oldCurrentRow && oldCurrentRow !== newCurrentRow) {oldCurrentRow.status = "DONE"}
+        if (oldCurrentRow && oldCurrentRow !== newCurrentRow) { oldCurrentRow.status = "DONE" }
     }
 
     clear() {
@@ -67,7 +72,7 @@ class ScoreCard {
         return row.shots
     }
 
-    updateAll(shotsThisRound:number[]) {
+    updateAll(shotsThisRound: number[]) {
         this.rows.forEach((row, index) => {
             row.shots = shotsThisRound[index]
         })
@@ -108,7 +113,7 @@ class ScoreCard {
         table.innerHTML += `
         <tfoot>
             <tr>
-                <th colspan="3"></th><th>${this.totalScore} over par</th>
+                <th colspan="3"></th><th>${Math.abs(this.totalScore)} ${this.totalScore < 0 ? 'under' : 'over'} par</th>
             </tr>
         </tfoot>
         `
