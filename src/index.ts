@@ -1,6 +1,11 @@
 import {MiniGolfGame} from './MiniGolfGame'
 import { levels } from './levels';
+import { SoundPlayer } from '../../worlds/src';
 
+const soundPlayer = new SoundPlayer({
+    "click": require('../audio/click.mp3'),
+    "tap": require('../audio/tap.mp3')
+})
 
 function init() {
 
@@ -10,6 +15,7 @@ function init() {
         messageElement: document.querySelector('#message'),
         resetButton: document.querySelector('#resetButton'),
         levels,
+        soundPlayer
     })
 
 }

@@ -1,11 +1,11 @@
-import { Body, Force, Geometry } from "../../worlds/src";
+import { Body, Force, Geometry, CollisionDetection } from "../../worlds/src";
 import { Hole } from "./Hole";
 
 class GolfBall extends Body {
     constructor(config: Geometry.Point, momentum: Force = null) {
         super({
-            x:config.x,
-            y:config.y,
+            x: config.x,
+            y: config.y,
             fillColor: 'white',
             color: 'black',
             size: 5,
@@ -20,6 +20,22 @@ class GolfBall extends Body {
         return this.world.areas
             .filter(area => area.typeId == 'Hole')
             .find(hole => hole.checkIfContainsPoint(this.data)) as Hole || null
+    }
+
+    get tapVolume() {
+        return .1 + .9 * (Math.min(this.momentum.magnitude / 50, 1))
+    }
+
+    handleCollision(report: CollisionDetection.CollisionReport) {
+        Body.prototype.handleCollision.apply(this, [report]);
+        if (report.force > 0) {
+            this.world.emitter.emit('SFX', 'tap', this.tapVolume);
+        }
+    }
+
+    handleWorldEdgeCollision(report: CollisionDetection.EdgeCollisionReport) {
+        Body.prototype.handleWorldEdgeCollision.apply(this, [report]);
+        this.world.emitter.emit('SFX', 'tap', this.tapVolume);
     }
 
     tick() {

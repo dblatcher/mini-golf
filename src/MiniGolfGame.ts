@@ -1,4 +1,4 @@
-import { Force, ViewPort, World, Geometry, Effect } from '../../worlds/src/index'
+import { Force, ViewPort, World, Geometry, SoundPlayer } from '../../worlds/src/index'
 import { GolfBall } from './GolfBall';
 import { Hole } from './Hole';
 import { MiniGolfLevel } from './MiniGolfLevel';
@@ -16,6 +16,7 @@ interface MiniGolfGameConfig {
     messageElement: HTMLElement
     resetButton: HTMLElement
     levels: MiniGolfLevel[]
+    soundPlayer?: SoundPlayer
 }
 
 class MiniGolfGame {
@@ -34,6 +35,7 @@ class MiniGolfGame {
         this.handleHover = this.handleHover.bind(this)
         this.handleBallInHole = this.handleBallInHole.bind(this)
         this.reset = this.reset.bind(this)
+        this.playSound = this.playSound.bind(this)
         this.config.resetButton.addEventListener('click', this.reset);
         this.config.mainCanvas.addEventListener('click', this.handleClick);
         this.config.mainCanvas.addEventListener('mousemove', this.handleHover);
@@ -56,12 +58,14 @@ class MiniGolfGame {
 
         if (this.world) {
             this.world.emitter.off("BALL_IN_HOLE", this.handleBallInHole)
+            this.world.emitter.off("SFX", this.playSound)
             this.world.stopTime();
         }
         if (this.mainView) { this.mainView.unsetWorld() }
 
         this.world = level.makeWorld();
         this.world.emitter.on("BALL_IN_HOLE", this.handleBallInHole)
+        this.world.emitter.on("SFX", this.playSound)
         this.mainView = new ViewPort({
             world: this.world,
             height: this.world.height + 125,
@@ -138,6 +142,9 @@ class MiniGolfGame {
         const distance = getDistanceBetweenPoints(golfBall.data, worldPoint) - golfBall.shapeValues.radius
         const magnitude = Math.min(maxPushForce, distance * pushForceDistanceMultipler / golfBall.mass)
 
+        const soundVolume = .1 + .9 * (magnitude / maxPushForce)
+        this.playSound('click', soundVolume);
+
         golfBall.momentum = Force.combine([golfBall.momentum, new Force(
             magnitude,
             getHeadingFromPointToPoint(golfBall.shapeValues, worldPoint)
@@ -157,6 +164,12 @@ class MiniGolfGame {
         swingIndicator.cursorPoint = worldPoint
         swingIndicator.maxPushForce = maxPushForce
         swingIndicator.pushForceDistanceMultipler = pushForceDistanceMultipler
+    }
+
+    playSound(soundId: string, volume: number = 1) {
+        if (this.config.soundPlayer) {
+            this.config.soundPlayer.play(soundId, { volume })
+        }
     }
 }
 
