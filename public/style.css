@@ -7,4 +7,33 @@ body {
     top: 0;
     right: 0;
     background: aqua;
+    opacity: .5;
+    pointer-events: none;
+}
+
+#message table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#message table th, #message table td {
+    padding: 2px 4px;
+    text-align: right;
+}
+
+#message table th:last-child, #message table td:last-child {
+    min-width: 6rem;
+}
+
+#message thead th {
+    border-bottom: 1px solid black;
+}
+
+#message tbody th {
+    border-right: 1px solid black;
+
+}
+
+#message tfoot th {
+    border-top: 1px solid black;
 }
