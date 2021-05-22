@@ -8,8 +8,17 @@ function makeCell(content: string | number, isTh = false) {
     return cell
 }
 
-class ScoreCardRow {
+function formatScore(score: number): string {
+    return score === null
+        ? ""
+        : score == 0 ? "par"
+            : score > 0
+                ? score + " over par"
+                : -score + " under par"
+}
 
+
+class ScoreCardRow {
     level: MiniGolfLevel
     shots: number
     status: "NOT STARTED" | "CURRENT" | "DONE"
@@ -31,12 +40,7 @@ class ScoreCardRow {
         row.appendChild(makeCell(name, true));
         row.appendChild(makeCell(par, false));
         row.appendChild(makeCell(this.status !== "NOT STARTED" ? this.shots : "", false));
-        row.appendChild(makeCell(this.score !== null
-            ? this.score > 0
-                ? this.score + " over par"
-                : -this.score + " under par"
-            : "",
-            false));
+        row.appendChild(makeCell(formatScore(this.score), false));
         return row
     }
 }
@@ -99,27 +103,26 @@ class ScoreCard {
         table.innerHTML += `
         <thead>
             <tr>
-                <th></th><th>par</th><th>shots</th><th>score</th>
+                <th></th><th>Par</th><th>Shots</th><th>Score</th>
             </tr>
         </thead>
         `
-        const tableBody = document.createElement('tbody');
-        table.appendChild(tableBody)
 
+        const tableBody = document.createElement('tbody');
         this.rows.forEach(row => {
             tableBody.appendChild(row.makeRow())
         })
+        table.appendChild(tableBody)
 
         table.innerHTML += `
         <tfoot>
             <tr>
-                <th colspan="3"></th><th>${Math.abs(this.totalScore)} ${this.totalScore < 0 ? 'under' : 'over'} par</th>
+                <th colspan="3"></th><th>${formatScore(this.totalScore)}</th>
             </tr>
         </tfoot>
         `
 
         return table
-
     }
 
 }
