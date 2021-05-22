@@ -1,4 +1,4 @@
-import { Force, ViewPort, World, Geometry, SoundPlayer } from '../../worlds/src/index'
+import { Force, ViewPort, World, Geometry, SoundPlayer, ToneConfigInput } from '../../worlds/src/index'
 import { GolfBall } from './GolfBall';
 import { Hole } from './Hole';
 import { MiniGolfLevel } from './MiniGolfLevel';
@@ -105,6 +105,7 @@ class MiniGolfGame {
 
     endOfCourse() {
         console.log('END')
+        this.playTone(MiniGolfGame.endOfRoundTone)
         this.swingIndicator.cursorPoint = null
         this.status = "END"
     }
@@ -125,6 +126,7 @@ class MiniGolfGame {
         }
         else {
             this.setUpLevel(this.currentLevel);
+            this.playTone(MiniGolfGame.nextLevelTone)
             this.scoreCard.setCurrentLevel(this.currentLevel)
         }
         this.updateCaptions()
@@ -169,6 +171,29 @@ class MiniGolfGame {
     playSound(soundId: string, volume: number = 1) {
         if (this.config.soundPlayer) {
             this.config.soundPlayer.play(soundId, { volume })
+        }
+    }
+
+    playTone(config: ToneConfigInput | string, label: string = null) {
+        if (this.config.soundPlayer) {
+            return this.config.soundPlayer.playTone(config, label)
+        }
+    }
+
+    static get nextLevelTone(): ToneConfigInput {
+        return {
+            frequency: 300,
+            endFrequency: 600,
+            type:'square',
+            duration: .75,
+        }
+    }
+
+    static get endOfRoundTone(): ToneConfigInput {
+        return {
+            frequency: 400,
+            endFrequency: 800,
+            duration: 1,
         }
     }
 }
