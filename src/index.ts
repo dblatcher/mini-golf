@@ -14,6 +14,10 @@ function init() {
         captionElement: document.querySelector('#caption'),
         messageElement: document.querySelector('#message'),
         resetButton: document.querySelector('#resetButton'),
+        controlModeInputs: {
+            swipeButton:document.querySelector('input#swipe'),
+            clickButton:document.querySelector('input#click'),
+        },
         levels,
         soundPlayer
     })
