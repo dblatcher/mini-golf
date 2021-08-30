@@ -38,15 +38,20 @@ class ClickSwingIndicator extends Effect {
 
         const plotPoint = translatePoint(golfBall.data, lineForce.vector);
 
-        const offset = (Date.now()/50) % 8;
-        const style = {
-            strokeColor: "white",
-            lineDash: [2, 6],
-            lineDashOffset: offset,
+
+        const offset = (Date.now()/20) % 30;
+
+        RenderFunctions.renderLine.onCanvas(ctx, [golfBall.data, plotPoint], {
+            strokeColor: "rgba(0,0,0,.5)",
             lineWidth: 6,
-        }
+        }, viewPort)
         
-        RenderFunctions.renderLine.onCanvas(ctx, [golfBall.data, plotPoint], style, viewPort)
+        RenderFunctions.renderLine.onCanvas(ctx, [golfBall.data, plotPoint], {
+            strokeColor: "white",
+            lineDash: [2, 28],
+            lineDashOffset: offset,
+            lineWidth: 4,
+        }, viewPort)
     }
 
     tick() { }

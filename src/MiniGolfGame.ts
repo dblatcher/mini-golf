@@ -1,9 +1,10 @@
-import { Force, ViewPort, World, Geometry, SoundPlayer, ToneConfigInput , Body} from '../../worlds/src/index'
+import { Force, ViewPort, World, Geometry, SoundPlayer, ToneConfigInput, Body } from '../../worlds/src/index'
 import { GolfBall } from './GolfBall';
 import { Hole } from './Hole';
 import { MiniGolfLevel } from './MiniGolfLevel';
 import { ScoreCard } from './ScoreCard';
 import { ClickSwingIndicator } from './ClickSwingIndicator';
+import { SwipeSwingIndicator } from './SwipeSwingIndicator';
 
 
 const { getDistanceBetweenPoints, getHeadingFromPointToPoint } = Geometry
@@ -62,7 +63,7 @@ class MiniGolfGame {
 
         this.config.resetButton.addEventListener('click', this.reset);
         this.config.mainCanvas.addEventListener('click', this.handleClick);
-        this.config.mainCanvas.addEventListener('mousemove', this.handleHover);
+        this.config.mainCanvas.addEventListener('pointermove', this.handleHover);
         this.config.mainCanvas.addEventListener('pointerdown', this.handleTouchStart);
         this.config.mainCanvas.addEventListener('pointerup', this.handleTouchEnd);
 
@@ -83,9 +84,10 @@ class MiniGolfGame {
 
     get golfBall() { return this.world.bodies.find(body => body.typeId == 'GolfBall') as GolfBall }
     get clickSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'ClickSwingIndicator') as ClickSwingIndicator }
+    get swipeSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'SwipeSwingIndicator') as SwipeSwingIndicator }
     get currentLevel() { return this.config.levels[this.levelNumber] }
-    get maxPushForce() { return 60 }
-    get clickForceMultipler() { return 400 }
+    get maxPushForce() { return 80 }
+    get clickForceMultipler() { return 300 }
     get swipeForceMultipler() { return .5 }
 
     setUpLevel(level: MiniGolfLevel) {
@@ -170,6 +172,7 @@ class MiniGolfGame {
 
         if (event.target == clickButton) {
             this.controlMode = "CLICK"
+            this.swipeSwingIndicator.cursorPoint = null
         }
         if (event.target == swipeButton) {
             this.controlMode = "SWIPE"
@@ -216,18 +219,36 @@ class MiniGolfGame {
     }
 
     handleHover(event: PointerEvent) {
-        const { mainView, clickSwingIndicator, maxPushForce, clickForceMultipler, status, controlMode } = this
-        if (controlMode !== 'CLICK') { return }
+        const { mainView, clickSwingIndicator, swipeSwingIndicator, maxPushForce, clickForceMultipler, status, controlMode } = this
 
         if (status == 'END') {
             clickSwingIndicator.cursorPoint = null
             return
         }
         const worldPoint = mainView.locateClick(event, true)
+
         if (!worldPoint) { return }
-        clickSwingIndicator.cursorPoint = worldPoint
-        clickSwingIndicator.maxPushForce = maxPushForce
-        clickSwingIndicator.pushForceDistanceMultipler = clickForceMultipler
+
+        if (controlMode === 'CLICK') {
+            clickSwingIndicator.cursorPoint = worldPoint
+            clickSwingIndicator.maxPushForce = maxPushForce
+            clickSwingIndicator.pushForceDistanceMultipler = clickForceMultipler
+            swipeSwingIndicator.cursorPoint = null
+
+        } else if (controlMode === 'SWIPE') {
+
+            if (touchMap.size > 0) {
+                const firstRecord = touchMap.values().next().value as TouchRecord
+                swipeSwingIndicator.cursorPoint = worldPoint
+                swipeSwingIndicator.swipeStartPoint =  firstRecord.startPoint
+                swipeSwingIndicator.maxPushForce = maxPushForce
+                swipeSwingIndicator.pushForceDistanceMultipler = clickForceMultipler
+            } else {
+                swipeSwingIndicator.cursorPoint = null
+            }
+
+            clickSwingIndicator.cursorPoint = null
+        }
     }
 
     handleTouchStart(event: PointerEvent) {
@@ -237,12 +258,13 @@ class MiniGolfGame {
         const startPoint = mainView.locateClick(event, true)
         if (!startPoint) { return }
 
-        touchMap.set(event.pointerId, { body:golfBall, startTime: Date.now(), startPoint })
+        touchMap.set(event.pointerId, { body: golfBall, startTime: Date.now(), startPoint })
     }
 
     handleTouchEnd(event: PointerEvent) {
         const { mainView, maxPushForce, swipeForceMultipler, controlMode, playSound } = this
         if (controlMode !== 'SWIPE') { return }
+        this.swipeSwingIndicator.cursorPoint = null
 
         const touchRecord = touchMap.get(event.pointerId)
 
@@ -251,7 +273,7 @@ class MiniGolfGame {
             const { body, startPoint } = touchRecord;
             const endPoint = mainView.locateClick(event, true)
             if (!endPoint) { return }
-    
+
             const push = Force.fromVector(
                 (endPoint.x - startPoint.x) * swipeForceMultipler,
                 (endPoint.y - startPoint.y) * swipeForceMultipler
