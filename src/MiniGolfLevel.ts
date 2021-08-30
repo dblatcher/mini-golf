@@ -1,7 +1,7 @@
 import { Area, Body, Geometry, shapes, World } from "../../worlds/src";
 import { GolfBall } from "./GolfBall";
 import { Hole } from "./Hole";
-import { SwingIndicator } from "./SwingIndicator";
+import { ClickSwingIndicator } from "./ClickSwingIndicator";
 
 
 interface Obstacle {
@@ -62,7 +62,7 @@ class MiniGolfLevel {
                 airDensity: .5,
                 backGrounds: [],
                 hasHardEdges: true,
-                effects: [new SwingIndicator()],
+                effects: [new ClickSwingIndicator()],
                 fillColor: 'green',
             }
         )

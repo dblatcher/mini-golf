@@ -3,7 +3,7 @@ import { getDistanceBetweenPoints, getHeadingFromPointToPoint, translatePoint } 
 import { GolfBall } from "./GolfBall";
 
 
-class SwingIndicator extends Effect {
+class ClickSwingIndicator extends Effect {
     cursorPoint: Geometry.Point
     maxPushForce: number
     pushForceDistanceMultipler: number
@@ -13,7 +13,7 @@ class SwingIndicator extends Effect {
         super({ x: 0, y: 0, frame: 0, duration: Infinity });
     }
 
-    get typeId() { return "SwingIndicator" }
+    get typeId() { return "ClickSwingIndicator" }
 
     get golfBall() {
         return this.world.bodies.find(body => body.typeId == 'GolfBall') as GolfBall
@@ -38,22 +38,18 @@ class SwingIndicator extends Effect {
 
         const plotPoint = translatePoint(golfBall.data, lineForce.vector);
 
+        const offset = (Date.now()/50) % 8;
         const style = {
             strokeColor: "white",
-            lineDash: [2, 3],
-            lineWidth: 3,
+            lineDash: [2, 6],
+            lineDashOffset: offset,
+            lineWidth: 6,
         }
-
-        RenderFunctions.renderCircle.onCanvas(ctx, {
-            x: golfBall.data.x,
-            y: golfBall.data.y,
-            radius: golfBall.data.size + 5
-        }, style, viewPort)
-
+        
         RenderFunctions.renderLine.onCanvas(ctx, [golfBall.data, plotPoint], style, viewPort)
     }
 
     tick() { }
 }
 
-export { SwingIndicator }
+export { ClickSwingIndicator }

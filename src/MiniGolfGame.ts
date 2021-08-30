@@ -3,7 +3,7 @@ import { GolfBall } from './GolfBall';
 import { Hole } from './Hole';
 import { MiniGolfLevel } from './MiniGolfLevel';
 import { ScoreCard } from './ScoreCard';
-import { SwingIndicator } from './SwingIndicator';
+import { ClickSwingIndicator } from './ClickSwingIndicator';
 
 
 const { getDistanceBetweenPoints, getHeadingFromPointToPoint } = Geometry
@@ -82,7 +82,7 @@ class MiniGolfGame {
     }
 
     get golfBall() { return this.world.bodies.find(body => body.typeId == 'GolfBall') as GolfBall }
-    get swingIndicator() { return this.world.effects.find(effect => effect.typeId == 'SwingIndicator') as SwingIndicator }
+    get clickSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'ClickSwingIndicator') as ClickSwingIndicator }
     get currentLevel() { return this.config.levels[this.levelNumber] }
     get maxPushForce() { return 60 }
     get clickForceMultipler() { return 400 }
@@ -140,7 +140,7 @@ class MiniGolfGame {
     endOfCourse() {
         console.log('END')
         this.playTone(MiniGolfGame.endOfRoundTone)
-        this.swingIndicator.cursorPoint = null
+        this.clickSwingIndicator.cursorPoint = null
         this.status = "END"
     }
 
@@ -173,7 +173,7 @@ class MiniGolfGame {
         }
         if (event.target == swipeButton) {
             this.controlMode = "SWIPE"
-            this.swingIndicator.cursorPoint = null
+            this.clickSwingIndicator.cursorPoint = null
         }
     }
 
@@ -216,18 +216,18 @@ class MiniGolfGame {
     }
 
     handleHover(event: PointerEvent) {
-        const { mainView, swingIndicator, maxPushForce, clickForceMultipler, status, controlMode } = this
+        const { mainView, clickSwingIndicator, maxPushForce, clickForceMultipler, status, controlMode } = this
         if (controlMode !== 'CLICK') { return }
 
         if (status == 'END') {
-            swingIndicator.cursorPoint = null
+            clickSwingIndicator.cursorPoint = null
             return
         }
         const worldPoint = mainView.locateClick(event, true)
         if (!worldPoint) { return }
-        swingIndicator.cursorPoint = worldPoint
-        swingIndicator.maxPushForce = maxPushForce
-        swingIndicator.pushForceDistanceMultipler = clickForceMultipler
+        clickSwingIndicator.cursorPoint = worldPoint
+        clickSwingIndicator.maxPushForce = maxPushForce
+        clickSwingIndicator.pushForceDistanceMultipler = clickForceMultipler
     }
 
     handleTouchStart(event: PointerEvent) {
