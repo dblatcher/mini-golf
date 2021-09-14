@@ -23,10 +23,10 @@ interface MiniGolfGameConfig {
     captionElement: HTMLElement
     messageElement: HTMLElement
     resetButton: HTMLElement
-    levels: MiniGolfLevel[]
     soundPlayer?: SoundPlayer
     controlMode?: "CLICK" | "SWIPE"
-
+    courseMap: Map<string, MiniGolfLevel[]>
+    defaultCourseName?: string
     controlModeInputs?: {
         clickButton: HTMLInputElement
         swipeButton: HTMLInputElement
@@ -39,6 +39,7 @@ class MiniGolfGame {
     mainView: ViewPort
     scoreCard: ScoreCard
     cursorPoint: Geometry.Point
+    _courseName: string
     levelNumber: number
     shotsThisRound: number[]
     status: "PLAY" | "END"
@@ -68,10 +69,11 @@ class MiniGolfGame {
         this.config.mainCanvas.addEventListener('pointerdown', this.handleTouchStart);
         this.config.mainCanvas.addEventListener('pointerup', this.handleTouchEnd);
 
-        const scores: number[] = [];
-        scores.length = this.config.levels.length;
-        scores.fill(0, 0, scores.length);
-        this.scoreCard = new ScoreCard(this.config.levels, scores);
+        this._courseName = this.config.courseMap.has(this.config.defaultCourseName) 
+            ? this.config.defaultCourseName 
+            : this.config.courseMap.keys().next().value;
+
+        this.scoreCard = new ScoreCard(this.levels);
 
         if (config.controlModeInputs) {
             this.controlModeInputs = config.controlModeInputs
@@ -83,10 +85,21 @@ class MiniGolfGame {
         this.reset();
     }
 
+    get courseName() { return this._courseName }
+    set courseName(value:string) {
+        if (this.config.courseMap.has(value)) {
+            this._courseName = value
+
+            this.scoreCard = new ScoreCard(this.levels);
+            this.reset()
+        }
+    }
+
+    get levels() { return this.config.courseMap.get(this.courseName) }
     get golfBall() { return this.world.bodies.find(body => body.typeId == 'GolfBall') as GolfBall }
     get clickSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'ClickSwingIndicator') as ClickSwingIndicator }
     get swipeSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'SwipeSwingIndicator') as SwipeSwingIndicator }
-    get currentLevel() { return this.config.levels[this.levelNumber] }
+    get currentLevel() { return this.levels[this.levelNumber] }
     get maxPushForce() { return constants.MAX_PUSH_FORCE }
     get clickForceMultipler() { return 300 }
     get swipeForceMultipler() { return .1 }
@@ -182,7 +195,7 @@ class MiniGolfGame {
 
     goToNextLevel() {
         this.levelNumber++
-        if (this.levelNumber >= this.config.levels.length) {
+        if (this.levelNumber >= this.levels.length) {
             this.endOfCourse()
         }
         else {

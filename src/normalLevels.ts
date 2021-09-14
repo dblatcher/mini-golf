@@ -1,25 +1,8 @@
 import { MiniGolfLevel } from "./MiniGolfLevel"
 
-function getRightAngleCorners(width: number = 1) {
-    return [
-        { x: -width, y: -1 },
-        { x: width, y: -1 },
-        { x: width, y: 1 },
-    ]
-}
+const { getRectangleCorners, getRightAngleCorners, _deg } = MiniGolfLevel
 
-function getRectangleCorners(width: number = 1) {
-    return [
-        { x: -width, y: -1 },
-        { x: width, y: -1 },
-        { x: width, y: 1 },
-        { x: -width, y: 1 }
-    ]
-}
-
-const _deg = (Math.PI * 2) / 360
-
-const levels: MiniGolfLevel[] = [
+const normalLevels: MiniGolfLevel[] = [
 
     new MiniGolfLevel({
         name: 'Tap round',
@@ -39,7 +22,7 @@ const levels: MiniGolfLevel[] = [
             { x: 430, y: 220, size: 30, heading: .2, shape: 'square' },
         ],
         bunkers: [
-            {x:100, y:250,size:45,heading:45*_deg, shape:'polygon', corners:getRightAngleCorners(.8)}
+            { x: 100, y: 250, size: 45, heading: 45 * _deg, shape: 'polygon', corners: getRightAngleCorners(.8) }
         ]
     }),
 
@@ -50,7 +33,7 @@ const levels: MiniGolfLevel[] = [
         goal: { x: 450, y: 150 },
         obstacles: [
             { x: 250, y: 50, size: 50, heading: 0 * _deg, shape: 'polygon', corners: getRectangleCorners(.1) },
-            { x: 250, y: 150, size: 50, heading: 0 * _deg, shape: 'polygon', corners: getRectangleCorners(.05), rotate:- .04 },
+            { x: 250, y: 150, size: 50, heading: 0 * _deg, shape: 'polygon', corners: getRectangleCorners(.05), rotate: - .04 },
             { x: 250, y: 250, size: 50, heading: 0 * _deg, shape: 'polygon', corners: getRectangleCorners(.1) },
         ],
     }),
@@ -105,4 +88,4 @@ const levels: MiniGolfLevel[] = [
 
 ]
 
-export { levels }
+export { normalLevels }

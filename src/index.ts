@@ -1,11 +1,17 @@
 import {MiniGolfGame} from './MiniGolfGame'
-import { levels } from './levels';
+import { normalLevels } from './normalLevels';
 import { SoundPlayer } from '../../worlds/src';
+import { MiniGolfLevel } from './MiniGolfLevel';
+import { testLevels } from './testLevels';
 
 const soundPlayer = new SoundPlayer({
     "click": require('../audio/click.mp3'),
     "tap": require('../audio/tap.mp3')
 })
+
+const courseMap = new Map<string, MiniGolfLevel[]>()
+    .set("normal", normalLevels)
+    .set("test", testLevels)
 
 function init() {
 
@@ -18,8 +24,9 @@ function init() {
             swipeButton:document.querySelector('input#swipe'),
             clickButton:document.querySelector('input#click'),
         },
-        levels,
-        soundPlayer
+        soundPlayer,
+        courseMap,
+        defaultCourseName:"test",
     })
 
 }

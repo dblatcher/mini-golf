@@ -48,7 +48,7 @@ class ScoreCardRow {
 class ScoreCard {
     rows: ScoreCardRow[]
 
-    constructor(levels: MiniGolfLevel[], shots: number[] = null) {
+    constructor(levels: MiniGolfLevel[], shots?: number[]) {
         this.rows = levels.map((level, index) => {
             return new ScoreCardRow(level, shots ? shots[index] : 0, index == 0 ? "CURRENT" : "NOT STARTED")
         })
