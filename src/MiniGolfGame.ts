@@ -23,6 +23,7 @@ interface MiniGolfGameConfig {
     captionElement: HTMLElement
     messageElement: HTMLElement
     resetButton: HTMLElement
+    courseSelectElement?: HTMLSelectElement
     soundPlayer?: SoundPlayer
     controlMode?: "CLICK" | "SWIPE"
     courseMap: Map<string, MiniGolfLevel[]>
@@ -49,7 +50,7 @@ class MiniGolfGame {
         clickButton: HTMLInputElement
         swipeButton: HTMLInputElement
     }
-
+    courseSelectElement?: HTMLSelectElement
 
     constructor(config: MiniGolfGameConfig) {
         this.config = config;
@@ -69,8 +70,8 @@ class MiniGolfGame {
         this.config.mainCanvas.addEventListener('pointerdown', this.handleTouchStart);
         this.config.mainCanvas.addEventListener('pointerup', this.handleTouchEnd);
 
-        this._courseName = this.config.courseMap.has(this.config.defaultCourseName) 
-            ? this.config.defaultCourseName 
+        this._courseName = this.config.courseMap.has(this.config.defaultCourseName)
+            ? this.config.defaultCourseName
             : this.config.courseMap.keys().next().value;
 
         this.scoreCard = new ScoreCard(this.levels);
@@ -82,11 +83,46 @@ class MiniGolfGame {
             this.controlMode = config.controlMode || "CLICK"
         }
 
+        if (config.courseSelectElement) {
+            this.courseSelectElement = config.courseSelectElement
+            this.initCourseSelectElement()
+        }
+
         this.reset();
     }
 
+    initCourseSelectElement(): void {
+        const { courseMap } = this.config;
+        const { courseSelectElement, courseName } = this;
+        if (!courseSelectElement) { return }
+
+        const addOption = (keyName: string, selected = false) => {
+            const option = document.createElement('option')
+            option.value = keyName
+            option.innerText = keyName
+            option.selected = selected
+            courseSelectElement.appendChild(option)
+        }
+
+        const keys = courseMap.keys();
+
+        let done = false, result: IteratorResult<string, any>;
+        while (!done) {
+            result = keys.next()
+            done = result.done
+            if (!done) {
+                addOption(result.value, result.value === courseName)
+            }
+        }
+
+        courseSelectElement.addEventListener('change', () => {
+            this.courseName = courseSelectElement.value
+        })
+
+    }
+
     get courseName() { return this._courseName }
-    set courseName(value:string) {
+    set courseName(value: string) {
         if (this.config.courseMap.has(value)) {
             this._courseName = value
 

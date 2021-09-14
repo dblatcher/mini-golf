@@ -20,6 +20,7 @@ function init() {
         captionElement: document.querySelector('#caption'),
         messageElement: document.querySelector('#message'),
         resetButton: document.querySelector('#resetButton'),
+        courseSelectElement: document.querySelector('#courseSelect'),
         controlModeInputs: {
             swipeButton:document.querySelector('input#swipe'),
             clickButton:document.querySelector('input#click'),
