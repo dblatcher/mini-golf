@@ -3,6 +3,7 @@ import { GolfBall } from "./GolfBall";
 import { Hole } from "./Hole";
 import { ClickSwingIndicator } from "./ClickSwingIndicator";
 import { SwipeSwingIndicator } from "./SwipeSwingIndicator";
+import { constants } from "./constants";
 
 
 interface Obstacle {
@@ -60,7 +61,7 @@ class MiniGolfLevel {
             ],
             {
                 width, height,
-                airDensity: .5,
+                airDensity: constants.GROUND_DRAG,
                 backGrounds: [],
                 hasHardEdges: true,
                 effects: [new ClickSwingIndicator(), new SwipeSwingIndicator()],
@@ -86,7 +87,7 @@ class MiniGolfLevel {
 
         if (obstacle.rotate) {
             body.tick = () => {
-                body.data.heading += obstacle.rotate
+                body.data.heading += obstacle.rotate * constants.ROTATE_RATE
             }
         }
 
@@ -101,7 +102,7 @@ class MiniGolfLevel {
         const area = new Area({
             x, y, size,
             shape: shapeValue,
-            density: 2,
+            density: constants.GROUND_DRAG*5,
             heading: bunker.heading || 0,
             corners,
             fillColor: 'rgba(200,150,50,1)',

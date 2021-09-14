@@ -5,6 +5,7 @@ import { MiniGolfLevel } from './MiniGolfLevel';
 import { ScoreCard } from './ScoreCard';
 import { ClickSwingIndicator } from './ClickSwingIndicator';
 import { SwipeSwingIndicator } from './SwipeSwingIndicator';
+import { constants } from './constants';
 
 
 const { getDistanceBetweenPoints, getHeadingFromPointToPoint } = Geometry
@@ -86,9 +87,9 @@ class MiniGolfGame {
     get clickSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'ClickSwingIndicator') as ClickSwingIndicator }
     get swipeSwingIndicator() { return this.world.effects.find(effect => effect.typeId == 'SwipeSwingIndicator') as SwipeSwingIndicator }
     get currentLevel() { return this.config.levels[this.levelNumber] }
-    get maxPushForce() { return 80 }
+    get maxPushForce() { return constants.MAX_PUSH_FORCE }
     get clickForceMultipler() { return 300 }
-    get swipeForceMultipler() { return .5 }
+    get swipeForceMultipler() { return .1 }
 
     setUpLevel(level: MiniGolfLevel) {
 
@@ -112,7 +113,7 @@ class MiniGolfGame {
             framefill: 'rgba(0,0,0,.5)',
             magnify: 1,
         })
-        this.world.ticksPerSecond = 50;
+        this.world.ticksPerSecond = constants.WORLD_SPEED;
 
         this.shotsThisRound[this.levelNumber] = 0;
         this.status = "PLAY"
@@ -285,7 +286,6 @@ class MiniGolfGame {
                 (endPoint.y - startPoint.y) * swipeForceMultipler
             )
             push.magnitude = Math.min(maxPushForce, push.magnitude)
-
             this.pushBall(push);
         }
     }

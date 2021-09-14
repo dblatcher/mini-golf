@@ -1,4 +1,5 @@
 import { Body, Force, Geometry, CollisionDetection } from "../../worlds/src";
+import { constants } from "./constants";
 import { Hole } from "./Hole";
 
 class GolfBall extends Body {
@@ -8,7 +9,8 @@ class GolfBall extends Body {
             y: config.y,
             fillColor: 'white',
             color: 'black',
-            size: 5,
+            size: constants.BALL_SIZE,
+            density:constants.BALL_DENSITY,
         }, momentum);
 
     }

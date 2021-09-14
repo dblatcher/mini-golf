@@ -1,4 +1,5 @@
 import { Area, AreaData, Geometry } from "../../worlds/src";
+import { constants } from "./constants";
 
 class Hole extends Area {
 
@@ -8,8 +9,8 @@ class Hole extends Area {
             y: config.y,
             color: 'black',
             fillColor: 'black',
-            size: 12,
-            density: .5
+            size: constants.HOLE_SIZE,
+            density: constants.GROUND_DRAG*2
         })
     }
 
