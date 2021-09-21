@@ -130,6 +130,14 @@ class MiniGolfLevel {
         ]
     }
 
+    static getIsoscelesCorners(width: number = 1): Point[] {
+        return [
+            { x: 0, y: -1 },
+            { x: width, y: 1 },
+            { x: -width, y: 1 },
+        ]
+    }
+
     static get _deg(): number { return _deg }
 }
 

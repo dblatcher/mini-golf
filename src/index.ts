@@ -2,7 +2,7 @@ import {MiniGolfGame} from './MiniGolfGame'
 import { normalLevels } from './normalLevels';
 import { SoundPlayer } from '../../worlds/src';
 import { MiniGolfLevel } from './MiniGolfLevel';
-import { testLevels } from './testLevels';
+import { harderLevels } from './harderLevels';
 
 const soundPlayer = new SoundPlayer({
     "click": require('../audio/click.mp3'),
@@ -10,8 +10,8 @@ const soundPlayer = new SoundPlayer({
 })
 
 const courseMap = new Map<string, MiniGolfLevel[]>()
-    .set("normal", normalLevels)
-    .set("test", testLevels)
+    .set("Normal Course", normalLevels)
+    .set("Harder Course", harderLevels)
 
 function init() {
 
@@ -27,7 +27,6 @@ function init() {
         },
         soundPlayer,
         courseMap,
-        defaultCourseName:"test",
     })
 
 }
