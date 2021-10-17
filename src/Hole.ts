@@ -1,4 +1,4 @@
-import { Area, AreaData, Geometry } from "../../worlds/src";
+import { Area, AreaData, Geometry } from "physics-worlds";
 import { constants } from "./constants";
 
 class Hole extends Area {

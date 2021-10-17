@@ -1,7 +1,7 @@
-import { Effect, Force, Geometry, RenderFunctions, ViewPort } from "../../worlds/src";
-import { getDistanceBetweenPoints, getHeadingFromPointToPoint, translatePoint } from "../../worlds/src/geometry";
+import { Effect, Force, Geometry, RenderFunctions, ViewPort } from "physics-worlds";
 import { GolfBall } from "./GolfBall";
 
+const { getDistanceBetweenPoints, getHeadingFromPointToPoint, translatePoint } = Geometry;
 
 class ClickSwingIndicator extends Effect {
     cursorPoint: Geometry.Point

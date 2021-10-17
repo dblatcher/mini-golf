@@ -1,11 +1,11 @@
-import { Area, Body, Geometry, shapes, World } from "../../worlds/src";
+import { Area, Body, Geometry, shapes, World } from "physics-worlds";
 import { GolfBall } from "./GolfBall";
 import { Hole } from "./Hole";
 import { ClickSwingIndicator } from "./ClickSwingIndicator";
 import { SwipeSwingIndicator } from "./SwipeSwingIndicator";
 import { constants } from "./constants";
-import { Point, _deg } from "../../worlds/src/geometry/definitions";
 
+const {  _deg  } = Geometry;
 
 interface Obstacle {
     x: number
@@ -113,7 +113,7 @@ class MiniGolfLevel {
         return area;
     }
 
-    static getRightAngleCorners(width: number = 1): Point[] {
+    static getRightAngleCorners(width: number = 1): Geometry.Point[] {
         return [
             { x: -width, y: -1 },
             { x: width, y: -1 },
@@ -121,7 +121,7 @@ class MiniGolfLevel {
         ]
     }
 
-    static getRectangleCorners(width: number = 1): Point[] {
+    static getRectangleCorners(width: number = 1): Geometry.Point[] {
         return [
             { x: -width, y: -1 },
             { x: width, y: -1 },
@@ -130,7 +130,7 @@ class MiniGolfLevel {
         ]
     }
 
-    static getIsoscelesCorners(width: number = 1): Point[] {
+    static getIsoscelesCorners(width: number = 1): Geometry.Point[] {
         return [
             { x: 0, y: -1 },
             { x: width, y: 1 },

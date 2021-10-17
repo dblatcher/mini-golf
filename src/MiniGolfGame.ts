@@ -1,4 +1,4 @@
-import { Force, ViewPort, World, Geometry, SoundPlayer, ToneConfigInput, Body } from '../../worlds/src/index'
+import { Force, ViewPort, World, Geometry, SoundPlayer, ToneConfigInput, Body } from 'physics-worlds'
 import { GolfBall } from './GolfBall';
 import { Hole } from './Hole';
 import { MiniGolfLevel } from './MiniGolfLevel';

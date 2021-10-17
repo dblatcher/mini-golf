@@ -1,6 +1,6 @@
-import {MiniGolfGame} from './MiniGolfGame'
+import { MiniGolfGame } from './MiniGolfGame'
 import { normalLevels } from './normalLevels';
-import { SoundPlayer } from '../../worlds/src';
+import { SoundPlayer } from 'physics-worlds';
 import { MiniGolfLevel } from './MiniGolfLevel';
 import { harderLevels } from './harderLevels';
 
@@ -22,8 +22,8 @@ function init() {
         resetButton: document.querySelector('#resetButton'),
         courseSelectElement: document.querySelector('#courseSelect'),
         controlModeInputs: {
-            swipeButton:document.querySelector('input#swipe'),
-            clickButton:document.querySelector('input#click'),
+            swipeButton: document.querySelector('input#swipe'),
+            clickButton: document.querySelector('input#click'),
         },
         soundPlayer,
         courseMap,

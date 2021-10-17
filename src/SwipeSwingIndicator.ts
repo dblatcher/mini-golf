@@ -1,8 +1,7 @@
-import { Effect, Force, Geometry, RenderFunctions, ViewPort } from "../../worlds/src";
-import { getDistanceBetweenPoints, getHeadingFromPointToPoint, translatePoint, _deg } from "../../worlds/src/geometry";
+import { Force, Geometry, RenderFunctions, ViewPort } from "physics-worlds";
 import { ClickSwingIndicator } from "./ClickSwingIndicator";
-import { GolfBall } from "./GolfBall";
 
+const { getDistanceBetweenPoints, getHeadingFromPointToPoint, translatePoint, _deg } = Geometry;
 
 class SwipeSwingIndicator extends ClickSwingIndicator {
 

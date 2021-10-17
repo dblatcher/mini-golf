@@ -1,4 +1,4 @@
-import { Body, Force, Geometry, CollisionDetection } from "../../worlds/src";
+import { Body, Force, Geometry, CollisionDetection } from "physics-worlds";
 import { constants } from "./constants";
 import { Hole } from "./Hole";
 
